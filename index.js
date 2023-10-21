@@ -83,26 +83,19 @@ async function run() {
     })
 
 
-    // product cart api
+    // product cart api here
 
     app.get('/cart/:userId', async(req, res) => {
 
       const user = req.params.userId
-
-      try {
-        const cursor = cartCollection.find({user: user}); // Filter data based on the brand name
+        const cursor = cartCollection.find({user: user}); 
         const result = await cursor.toArray();
-        res.json(result); // Send the filtered data as a JSON response
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' }); // Handle errors appropriately
-    }
+        res.json(result); 
 
     })
     
     app.post('/cart', async(req, res) => {
       const cartProduct = req.body
-      console.log(cartProduct)
 
       const result = await cartCollection.insertOne(cartProduct)
       res.send(result)
@@ -111,7 +104,6 @@ async function run() {
 
     app.delete('/cart/:id', async(req, res) => {
       const id = req.params.id
-      console.log('delete', id)
       const query = { _id: id}
 
       const result = await cartCollection.deleteOne(query)
