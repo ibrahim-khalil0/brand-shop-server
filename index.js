@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 
@@ -9,14 +10,9 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
+console.log(process.env.DB_USER)
 
-
-// mdibrahimkhalil0183
-// 4GSmxN618S0ouXUt
-
-
-
-const uri = "mongodb+srv://mdibrahimkhalil0183:4GSmxN618S0ouXUt@cluster0.bqms9ir.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bqms9ir.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -30,7 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const productsCollection = client.db('productsDB').collection('products')
     const cartCollection = client.db('productsDB').collection('cart')
@@ -39,14 +35,10 @@ async function run() {
     app.get('/products/:brand_name', async (req, res) => {
         const brand = req.params.brand_name;
     
-        try {
-            const cursor = productsCollection.find({ brand: brand }); // Filter data based on the brand name
+            const cursor = productsCollection.find({ brand: brand });
             const result = await cursor.toArray();
-            res.json(result); // Send the filtered data as a JSON response
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' }); // Handle errors appropriately
-        }
+            res.json(result);
+        
     });
     
     app.get('/products/:brand_name/:id', async (req, res) => {
